@@ -11,9 +11,12 @@ package mvnu.cs;
 import java.util.Optional;
 import javafx.scene.control.Alert;
 import javafx.scene.control.ButtonType;
+import javafx.scene.control.ChoiceDialog;
 import javafx.scene.control.TextInputDialog;
 
 public class FXOptionPane {
+    
+    public static final int YES_NO_OPTION = 1;
     
     /**
      * Emulate a JOptionPane Dialog using TextInputDialog
@@ -202,5 +205,25 @@ public class FXOptionPane {
     public static String showConfirmdialog(Object message){
         return showConfirmdialog(message, "Confirmation Dialog", 
                            Alert.AlertType.CONFIRMATION);
+    }
+    
+    /**
+     * Show a list of choices 
+     * @param message
+     * @param title
+     * @param choiceType -- only supports yes no for now
+     * @return 
+     */
+    public static String showChoiceDialog(Object message, String title, 
+                                                 int choiceType){
+        ChoiceDialog<String> cd = null;
+        if (choiceType == YES_NO_OPTION) {
+            cd = new ChoiceDialog<>("YES", new String[] {"YES", "NO"});
+            cd.setTitle(title);
+            cd.setContentText(message.toString());
+            Optional<String> result = cd.showAndWait();
+            return result.get();
+        }
+        return null;        
     }
 }
