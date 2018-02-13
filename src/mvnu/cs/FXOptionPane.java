@@ -17,6 +17,13 @@ import javafx.scene.control.TextInputDialog;
 public class FXOptionPane {
     
     public static final int YES_NO_OPTION = 1;
+
+    /**
+     * This is a utility class, don't allow object instances
+     */
+    private FXOptionPane() {
+        throw new AssertionError();
+    }
     
     /**
      * Emulate a JOptionPane Dialog using TextInputDialog
