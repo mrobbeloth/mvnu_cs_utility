@@ -14,7 +14,9 @@ import javafx.scene.control.ButtonType;
 import javafx.scene.control.ChoiceDialog;
 import javafx.scene.control.TextInputDialog;
 
-public class FXOptionPane {
+/* It's a utility class, so mark it final to keep derivative versions from
+   being created */
+public final class FXOptionPane {
     
     public static final int YES_NO_OPTION = 1;
 
