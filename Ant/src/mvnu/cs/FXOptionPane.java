@@ -1,11 +1,3 @@
-/** FXOptionPane class
- *  emulates methods from javax.swing.JOptionPane using JavaFX Dialog windows
- *  This avoids using JOptionPane methods in MacOS environments
- *  that require a different configuration than Windows.
- * @author Bob Kasper, Computer Science, Mount Vernon Nazarene University
- * @author Michael Robbeloth, Computer Science, Mount Vernon Nazarene University
- */
-
 package mvnu.cs;
 
 import java.util.Optional;
@@ -13,11 +5,22 @@ import javafx.scene.control.Alert;
 import javafx.scene.control.ButtonType;
 import javafx.scene.control.ChoiceDialog;
 import javafx.scene.control.TextInputDialog;
-
-/* It's a utility class, so mark it final to keep derivative versions from
-   being created */
+/** FXOptionPane class
+ * This is a wrapper class for the JOptionPane samples in the
+ * Savitch Java textbook for CSC-1024 and CSC-2024 at
+ * Mount Vernon Nazarene University
+ *
+ * Targets Java SDK 16 and JavaFX SDK 16
+ *
+ * @author Bob Kasper, Computer Science, Mount Vernon Nazarene University
+ * @author Michael Robbeloth, Computer Science, Mount Vernon Nazarene University
+ * @version 2.0
+ */
 public final class FXOptionPane {
-    
+
+    /**
+     * Do you want approve deny options in the dialog
+     */
     public static final int YES_NO_OPTION = 1;
 
     /**
@@ -26,12 +29,23 @@ public final class FXOptionPane {
     private FXOptionPane() {
         throw new AssertionError();
     }
+
+    /**
+     * Emulate a JOptionPane Dialog using TextInputDialog
+     * Shows a question-message dialog requesting input from the user
+     * @param message -- text to show user
+     * @return text entered by the user
+     */
+    public static String showInputDialog(String message) {
+        return showInputDialog((Object)message);
+    }
     
     /**
      * Emulate a JOptionPane Dialog using TextInputDialog
      * Shows a question-message dialog requesting input from the user 
-     * @param message -- text to show user
-     * @return 
+     * @param message -- text to show user for objects other than string, it will use the toString method of the
+     * passed object
+     * @return text entered by the user
      */
     public static String showInputDialog(Object message) {
        if (message instanceof String) {
@@ -46,7 +60,7 @@ public final class FXOptionPane {
      * Shows a question-message dialog requesting input from the user 
      * @param o -- ignored, for legacy purposes
      * @param message -- text to display
-     * @return 
+     * @return text entered by the user
      */
     public static String showInputDialog(Object o, Object message) {
          
@@ -64,14 +78,14 @@ public final class FXOptionPane {
      * @param message -- text to display
      * @param initialSelectionValue -- the value used to initialize the input
      * field
-     * @return 
+     * @return text entered by the user
      */
     public static String showInputDialog(Object o, Object message, Object 
             initialSelectionValue) {
        if (message instanceof String) {
            if (initialSelectionValue instanceof String) {
-               return showInputDialog("Enter Input", null, (String)message, 
-                   (String)initialSelectionValue);               
+               return showInputDialog("Enter Input", null, (String)message,
+                       initialSelectionValue);
            }
            else {
                return showInputDialog("Enter Input", null, (String)message, 
@@ -80,8 +94,8 @@ public final class FXOptionPane {
        }
        else {
            if (initialSelectionValue instanceof String) {
-                return showInputDialog("Enter Input", null, message.toString(), 
-                   (String)initialSelectionValue);             
+                return showInputDialog("Enter Input", null, message.toString(),
+                        initialSelectionValue);
            }
            else {
                 return showInputDialog("Enter Input", null, message.toString(), 
@@ -95,7 +109,7 @@ public final class FXOptionPane {
      * @param title -- text to show at the top of the dialog window
      * @param header -- text to show in the dialog type pane
      * @param prompt -- text to show next to the entry prompt
-     * @return 
+     * @return text entered by the user
      */
     public static String showInputDialog(String title, String header, 
             String prompt) {
@@ -103,12 +117,12 @@ public final class FXOptionPane {
     }
     
     /**
-     * 
-     * @param title
-     * @param header
-     * @param prompt
-     * @param initialSelectionValue
-     * @return 
+     * Shows a question-message dialog requesting input from the user
+     * @param title -- text to show at the top of the dialog window
+     * @param header --  text to show in the dialog type pane
+     * @param prompt -- text to show next to the entry prompt
+     * @param initialSelectionValue -- prepopulated value in entry box of dialog
+     * @return text entered by the user
      */
      public static String showInputDialog(String title, String header, 
             String prompt, Object initialSelectionValue) {
@@ -125,10 +139,7 @@ public final class FXOptionPane {
        
        // get the response value
        Optional<String> result = dialog.showAndWait();
-       if (result.isPresent())
-           return result.get();
-       else
-           return "";       
+         return result.orElse("");
     }
    
     /**
@@ -188,7 +199,7 @@ public final class FXOptionPane {
      * Bring up a dialog with OK and CANCEL choices
      * @param message -- text to display
      * @param title -- text to show at the top of the dialog window
-     * @param messageType
+     * @param messageType -- Type of message to create (e.g., confirmation, etc.)
      * @return string of button pressed by user
      */
     public static String showConfirmdialog(Object message, String title, 
@@ -208,7 +219,12 @@ public final class FXOptionPane {
             }
         }
         Optional<ButtonType> result = alert.showAndWait();
-        return result.get().getText();
+        if (result.isPresent()) {
+            return result.get().getText();
+        }
+        else {
+            return "";
+        }
     }
     
     public static String showConfirmdialog(Object message){
@@ -218,20 +234,20 @@ public final class FXOptionPane {
     
     /**
      * Show a list of choices 
-     * @param message
-     * @param title
+     * @param message -- Tell user about the choice he/she needs to make
+     * @param title -- title text for dialog
      * @param choiceType -- only supports yes no for now
-     * @return 
+     * @return choice made by user
      */
     public static String showChoiceDialog(Object message, String title, 
                                                  int choiceType){
-        ChoiceDialog<String> cd = null;
+        ChoiceDialog<String> cd;
         if (choiceType == YES_NO_OPTION) {
-            cd = new ChoiceDialog<>("YES", new String[] {"YES", "NO"});
+            cd = new ChoiceDialog<>("YES", "YES", "NO");
             cd.setTitle(title);
             cd.setContentText(message.toString());
             Optional<String> result = cd.showAndWait();
-            return result.get();
+            return result.orElse("");
         }
         return null;        
     }

@@ -1,0 +1,10 @@
+<component name="ArtifactManager">
+  <artifact type="jar" build-on-make="true" name="MVNU_CS_Utility_LIbrary">
+    <output-path>$PROJECT_DIR$/out/artifacts/MVNU_CS_Utility_LIbrary</output-path>
+    <root id="archive" name="MVNU_CS_Utility_LIbrary.jar">
+      <element id="directory" name="META-INF">
+        <element id="file-copy" path="$PROJECT_DIR$/out/artifacts/META-INF/MANIFEST.MF" />
+      </element>
+    </root>
+  </artifact>
+</component>
